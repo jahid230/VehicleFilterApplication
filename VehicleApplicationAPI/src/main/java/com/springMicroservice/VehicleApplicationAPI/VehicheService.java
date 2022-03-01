@@ -19,11 +19,16 @@ public class VehicheService {
     Logger logger= LoggerFactory.getLogger(VehicheService.class);
     @Autowired
     VehicleRepo vehicleRepo;
+
+    public VehicheService(VehicleRepo vehicleRepo){
+        this.vehicleRepo=vehicleRepo;
+    }
     public List<VehicleEntity> getAllVehicle() throws VehicleException {
 
         List<VehicleEntity> vehicleEntityList= vehicleRepo.findAll();
 
         if(vehicleEntityList !=null){
+            logger.info("Vehicle Entities List:"+ vehicleEntityList.toString());
             return vehicleEntityList;
         }
         else{
@@ -35,11 +40,14 @@ public class VehicheService {
     public VehicleEntity createNewVehicle(CreateVehicleRequest createVehicleRequest) throws VehicleException {
 
         VehicleEntity vehicleEntity=new VehicleEntity();
+        logger.info(createVehicleRequest.get_id().toString());
+        vehicleEntity.set_id(createVehicleRequest.get_id());
         vehicleEntity.setVIN(createVehicleRequest.getVIN());
         vehicleEntity.setName(createVehicleRequest.getName());
         vehicleEntity.setLicencePlateNumber(createVehicleRequest.getLicencePlateNumber());
         vehicleEntity.setProp(createVehicleRequest.getProp());
         vehicleRepo.save(vehicleEntity);
+        logger.info(vehicleEntity.toString());
         return vehicleEntity;
 
 
@@ -47,7 +55,6 @@ public class VehicheService {
 
     public VehicleEntity updateVehicle(updateVehicleRequest updateVehicleRequest)
     {
-
 
         VehicleEntity vehicleEntity=vehicleRepo.findByVIN(updateVehicleRequest.getVIN());
 
@@ -81,6 +88,15 @@ public class VehicheService {
         return false;
     }
 
+    public VehicleEntity getVehicleByVIN(String VIN){
+        VehicleEntity vehicleEntity=vehicleRepo.findByVIN(VIN);
+
+        if(vehicleEntity!=null)
+            return vehicleEntity;
+        else
+            throw new VehicleNotFoundException("The Vehicle doesn't Exists:"+ VIN);
+
+    }
 
     public List<VehicleEntity> getVehicleByProperty(String Name, String Value){
 

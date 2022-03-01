@@ -4,6 +4,8 @@ package com.springMicroservice.VehicleApplicationAPI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,7 @@ public class VehicleController {
         @Autowired
         private VehicleRepo vehicleRepo;
 
+
         @GetMapping(value = "/GetVehicle",produces = { "application/json", "application/xml" })
         public List<VehicleEntity> getAllVehicle(){
                 try {
@@ -38,13 +41,16 @@ public class VehicleController {
         public ResponseEntity<Object> createVechicle (@RequestBody  CreateVehicleRequest vehicleRequest) throws VehicleException, Exception {
                 try{
                         logger.info(vehicleRequest.toString());
-                        if (!vehicleRequest.getName().isEmpty()
+                        VehicleEntity result=vehicheService.createNewVehicle(vehicleRequest);
+                        logger.info(result.toString());
+                        if ( !vehicleRequest.getName().isEmpty()
                                 && !vehicleRequest.getVIN().isEmpty()
                                 && !vehicleRequest.getLicencePlateNumber().isEmpty()
                                 && !vehicleRequest.getProp().isEmpty()) {
                                 if (vehicheService.createNewVehicle(vehicleRequest) != null) {
-                                        return new ResponseEntity<>("New Vehicle Created Successfully", HttpStatus.OK);
+                                        return new ResponseEntity<>("New Vehicle Created Successfully", HttpStatus.CREATED);
                                 } else
+                                        logger.info(vehicleRequest.toString());
                                         return new ResponseEntity<>("Mongo DB could Not Add the db", HttpStatus.INTERNAL_SERVER_ERROR);
                         }
 
@@ -57,12 +63,16 @@ public class VehicleController {
         }
 
         @GetMapping(value="/vehicle/find/{VIN}",produces = { "application/json", "application/xml" })
-        public VehicleEntity specificVehichle(@PathVariable String VIN) throws VehicleException{
-                VehicleEntity vehicleEntity=vehicleRepo.findByVIN(VIN);
-                if(vehicleEntity!=null)
-                        return vehicleEntity;
-                else
-                        throw new VehicleNotFoundException("The Vehicle doesn't Exists:"+ VIN);
+        public EntityModel<VehicleEntity> specificVehicle(@PathVariable String VIN) throws VehicleException{
+               VehicleEntity vehicle=vehicheService.getVehicleByVIN(VIN);
+               logger.info(vehicle.toString());
+               if(vehicle ==null){
+                       throw new VehicleNotFoundException("VIN:-"+VIN+ "Not Found in the DB");
+               }
+                EntityModel<VehicleEntity> vehicleEntityEntityModel=EntityModel.of(vehicle);
+                WebMvcLinkBuilder linkToVehicle=WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).specificVehicle(VIN));
+                vehicleEntityEntityModel.add(linkToVehicle.withRel("The link to get the Specific Vehicle"));
+                return vehicleEntityEntityModel;
 
         }
 

@@ -22,6 +22,7 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 @Document(collection = "VehicleEntity")
 public class VehicleEntity {
 
