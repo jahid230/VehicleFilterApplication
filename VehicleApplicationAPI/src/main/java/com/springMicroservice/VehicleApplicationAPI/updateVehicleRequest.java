@@ -1,13 +1,17 @@
 package com.springMicroservice.VehicleApplicationAPI;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import lombok.NonNull;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Data
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+@ToString
 public class updateVehicleRequest {
   @JsonProperty
   @NotNull(message = "VIN is required")

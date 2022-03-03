@@ -56,8 +56,9 @@ public class VehicheService {
     public VehicleEntity updateVehicle(updateVehicleRequest updateVehicleRequest)
     {
 
+        logger.info(updateVehicleRequest.toString());
         VehicleEntity vehicleEntity=vehicleRepo.findByVIN(updateVehicleRequest.getVIN());
-
+        logger.info(vehicleEntity.toString());
         String State = null;
         if(vehicleEntity!=null){
             if(updateVehicleRequest.getName()!=null && !updateVehicleRequest.getName().isEmpty()){

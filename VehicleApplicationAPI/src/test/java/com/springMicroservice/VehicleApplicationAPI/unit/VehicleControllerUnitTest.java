@@ -66,9 +66,6 @@ public class VehicleControllerUnitTest {
     @MockBean
     private VehicleRepo vehicleRepo;
     List<VehicleEntity> vehicleEntities = new ArrayList<VehicleEntity>();
-
-
-
     @BeforeEach
     public void intializeSeedData(){
 
