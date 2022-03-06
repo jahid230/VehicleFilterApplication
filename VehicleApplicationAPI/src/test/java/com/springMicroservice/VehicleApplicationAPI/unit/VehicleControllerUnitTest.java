@@ -153,7 +153,7 @@ public class VehicleControllerUnitTest {
         }
 
     @Test
-    public void updateVehicle_shouldReturnCorrectInsertionResponse() throws ExceptionResponse, Exception {
+    public void updateVehicle_shouldReturnCorrectInsertionResponse() throws ExceptionResponse, Exception, VehicleException {
         when(vehicheServiceMock.updateVehicle(any(updateVehicleRequest.class))).thenReturn(vehicleEntities.get(0));
         String requestBody="{\"VIN\":\""+vehicleEntities.get(0).getVIN()+"\","+
                 "\"Name\":\""+vehicleEntities.get(0).getName()+"\","+

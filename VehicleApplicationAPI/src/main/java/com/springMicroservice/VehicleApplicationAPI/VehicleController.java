@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.*;
 
 enum Strings{
@@ -38,7 +39,7 @@ public class VehicleController {
         }
         @PostMapping(value = "/CreateVehicle",produces = {"application/json","application/xml"},consumes = {"application/json","application/xml"})
         @ResponseBody
-        public ResponseEntity<Object> createVechicle (@RequestBody  CreateVehicleRequest vehicleRequest) throws VehicleException, Exception {
+        public ResponseEntity<Object> createVechicle (@Valid @RequestBody  CreateVehicleRequest vehicleRequest) throws VehicleException, Exception {
                 try{
                         logger.info(vehicleRequest.toString());
                         VehicleEntity result=vehicheService.createNewVehicle(vehicleRequest);
@@ -78,7 +79,7 @@ public class VehicleController {
 
 
         @PutMapping(value="/vehicle/update",produces = { "application/json", "application/xml" },consumes = {"application/json","application/xml"})
-        public ResponseEntity<Object> updateVehicle(@RequestBody updateVehicleRequest updateVehicleRequest) throws VehicleException{
+        public ResponseEntity<Object> updateVehicle(@Valid @RequestBody updateVehicleRequest updateVehicleRequest) throws VehicleException{
                 VehicleEntity vehicleEntity=vehicheService.updateVehicle(updateVehicleRequest);
                 if(vehicleEntity!=null){
                         return new ResponseEntity<>("Updated Successfully",HttpStatus.OK);

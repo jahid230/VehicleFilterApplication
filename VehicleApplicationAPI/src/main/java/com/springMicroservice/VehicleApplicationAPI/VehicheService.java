@@ -1,5 +1,6 @@
 package com.springMicroservice.VehicleApplicationAPI;
 
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,13 +54,16 @@ public class VehicheService {
 
     }
 
-    public VehicleEntity updateVehicle(updateVehicleRequest updateVehicleRequest)
-    {
+    public VehicleEntity updateVehicle(updateVehicleRequest updateVehicleRequest) throws VehicleException {
 
         logger.info(updateVehicleRequest.toString());
         VehicleEntity vehicleEntity=vehicleRepo.findByVIN(updateVehicleRequest.getVIN());
         logger.info(vehicleEntity.toString());
         String State = null;
+        if(vehicleEntity==null && !updateVehicleRequest.getVIN().isEmpty()){
+            CreateVehicleRequest bufferObject=new CreateVehicleRequest(new ObjectId(), updateVehicleRequest.getVIN(),updateVehicleRequest.getVIN(),updateVehicleRequest.getLicencePlateNumber(),updateVehicleRequest.getProp());
+            createNewVehicle(bufferObject);
+        }
         if(vehicleEntity!=null){
             if(updateVehicleRequest.getName()!=null && !updateVehicleRequest.getName().isEmpty()){
                 //update.set("Name",updateVehicleRequest.getName());
