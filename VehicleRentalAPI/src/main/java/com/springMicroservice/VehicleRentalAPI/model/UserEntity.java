@@ -1,12 +1,16 @@
 package com.springMicroservice.VehicleRentalAPI.model;
 
+import com.springMicroservice.VehicleRentalAPI.repository.UserEntityRepo;
 import com.springMicroservice.VehicleRentalAPI.request.UserRequestBody;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.ReadOnlyProperty;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.List;
 
@@ -55,5 +59,15 @@ public class UserEntity {
         this.zipCode=requestBody.getZipCode();
 
     }
+
+//    @Override
+//    public UserEntity findById(ObjectId id) {
+//        Query query=new Query();
+//        query.addCriteria(Criteria.where("_id").is(id));
+//        UserEntity user= mongoTemplate;
+//        return null;
+//    }
+
+
 
 }

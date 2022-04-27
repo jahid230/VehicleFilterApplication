@@ -40,4 +40,8 @@ public class RentingServiceRequest {
     @Positive
     @DecimalMin("1.00")
     private Double rent_per_day;
+
+    public ObjectId getCustomer_id(){
+        return this.customer_id;
+    }
 }

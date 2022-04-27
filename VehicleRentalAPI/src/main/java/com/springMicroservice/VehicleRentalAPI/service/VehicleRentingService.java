@@ -1,7 +1,7 @@
 package com.springMicroservice.VehicleRentalAPI.service;
 
 
-import com.springMicroservice.VehicleRentalAPI.Exception.VehicleException;
+import com.springMicroservice.VehicleRentalAPI.Exception.VehicleRuntimeException;
 import com.springMicroservice.VehicleRentalAPI.model.UserEntity;
 import com.springMicroservice.VehicleRentalAPI.model.VehicleRentEntity;
 import com.springMicroservice.VehicleRentalAPI.repository.UserEntityRepo;
@@ -9,78 +9,35 @@ import com.springMicroservice.VehicleRentalAPI.repository.VehicleRentRepo;
 import com.springMicroservice.VehicleRentalAPI.request.RentingServiceRequest;
 import com.springMicroservice.VehicleRentalAPI.request.UserRequestBody;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class VehicleRentingService {
 
-/*
-* private Object _id;
-
-    private String userName;
-
-    private String first_name;
-
-    private String last_name;
-
-    private String contact_number;
-
-    private String userFullName;
-
-    private String address;
-
-    private String street;
-
-    private String city;
-
-    private String zipCode;
-* */
+    Logger logger= LoggerFactory.getLogger(VehicleRentingService.class);
     @Autowired
     UserEntityRepo userEntityRepo;
     @Autowired
     VehicleRentRepo vehicleRentRepo;
 
-    public List<UserEntity> getAllUsersStatic(){
-        List<UserEntity> userList=new ArrayList<UserEntity>();
-        List<VehicleRentEntity> rentEntityList= new ArrayList<VehicleRentEntity>();
-        UserEntity user1= new UserEntity(new ObjectId(),"jahid230","Md Jahidul","Haque","012511230","Md Jahidul Haque","Josef-kindshoven-str. 5","Josef-kindshoven-str.","Bamberg","96052",rentEntityList);
-        userList.add(user1);
-        return userList;
+
+
+    public List<UserEntity> getAllUsers() throws VehicleRuntimeException{
+        List<UserEntity> users=userEntityRepo.findAll();
+        logger.info(users.toString());
+       return userEntityRepo.findAll();
     }
+    public UserEntity createNewUser(UserRequestBody useRequestBody) throws VehicleRuntimeException {
 
-    public List<UserEntity> getAllUsers(){
-        try{
-            if(!userEntityRepo.findAll().isEmpty() && userEntityRepo.findAll()!=null){
-                return userEntityRepo.findAll();
-            }
-            else{
-                return null;
-            }
-
-        }catch(Exception e){
-            throw e;
-        }
-
-    }
-    public UserEntity createNewUser(UserRequestBody useRequestBody) throws VehicleException {
-
-
-        try{
             UserEntity userObject=new UserEntity(useRequestBody);
             userObject.setRented_vehicles(new ArrayList<VehicleRentEntity>());
             userObject=userEntityRepo.save(userObject);
             return userObject;
-        }
-        catch(Exception e){
-            String error_msg= e.getMessage();
-            throw new VehicleException(new Date(),"Server Error",error_msg);
-        }
+
     }
 
 
@@ -89,8 +46,8 @@ public class VehicleRentingService {
         return vehicleRentRepo.findAll();
     }
 
-    public VehicleRentEntity createVehicleBooking(RentingServiceRequest request) throws VehicleException{
-        UserEntity userEntity=userEntityRepo.findById(request.getCustomer_id());
+    public VehicleRentEntity createVehicleBooking(RentingServiceRequest request) throws VehicleRuntimeException{
+        UserEntity userEntity=userEntityRepo.findById(request.getCustomer_id()).get();
         VehicleRentEntity vehicleRentEntity=new VehicleRentEntity(request);
         if(!userEntity.toString().isEmpty() && userEntity.toString()!=null){
             vehicleRentEntity.setUser(userEntity);

@@ -11,4 +11,5 @@ com/springMicroservice/VehicleRentalAPI/service/VehicleRentingService.class
 com/springMicroservice/VehicleRentalAPI/request/RentingServiceRequest.class
 com/springMicroservice/VehicleRentalAPI/model/VehicleRentEntity.class
 com/springMicroservice/VehicleRentalAPI/response/UserResponse.class
+com/springMicroservice/VehicleRentalAPI/controller/VehicleBookingController.class
 com/springMicroservice/VehicleRentalAPI/repository/VehicleRentRepo.class
